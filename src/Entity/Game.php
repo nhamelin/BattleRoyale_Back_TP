@@ -57,6 +57,11 @@ class Game
      */
     private $map;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date;
+
     public function __construct()
     {
         $this->players = new ArrayCollection();
@@ -165,6 +170,18 @@ class Game
     public function setMap(string $map): self
     {
         $this->map = $map;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

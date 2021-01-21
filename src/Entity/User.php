@@ -50,10 +50,7 @@ class User implements UserInterface
 
     public function __construct()
     {
-        $this->events = new ArrayCollection();
         $this->games = new ArrayCollection();
-        $this->gamesAsPlayer = new ArrayCollection();
-        $this->gamesAsOwner = new ArrayCollection();
     }
 
     public function getId(): ?int
