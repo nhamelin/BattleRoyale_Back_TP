@@ -42,15 +42,20 @@ class Game
     private $round;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Player::class, inversedBy="gamesAsPlayer")
+     * @ORM\OneToMany(targetEntity=Player::class, mappedBy="game", orphanRemoval=true)
      */
     private $players;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Player::class, inversedBy="gamesAsOwner")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="games")
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $map;
 
     public function __construct()
     {
@@ -122,6 +127,7 @@ class Game
     {
         if (!$this->players->contains($player)) {
             $this->players[] = $player;
+            $player->setGame($this);
         }
 
         return $this;
@@ -129,19 +135,36 @@ class Game
 
     public function removePlayer(Player $player): self
     {
-        $this->players->removeElement($player);
+        if ($this->players->removeElement($player)) {
+            // set the owning side to null (unless already changed)
+            if ($player->getGame() === $this) {
+                $player->setGame(null);
+            }
+        }
 
         return $this;
     }
 
-    public function getOwner(): ?Player
+    public function getOwner(): ?User
     {
         return $this->owner;
     }
 
-    public function setOwner(?Player $owner): self
+    public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getMap(): ?string
+    {
+        return $this->map;
+    }
+
+    public function setMap(string $map): self
+    {
+        $this->map = $map;
 
         return $this;
     }

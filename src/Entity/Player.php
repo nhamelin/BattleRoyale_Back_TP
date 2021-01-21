@@ -3,17 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\PlayerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
-use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
- * @ApiResource
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
  */
-class Player implements UserInterface
+class Player
 {
     /**
      * @ORM\Id
@@ -23,187 +18,58 @@ class Player implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="integer")
      */
-    private $email;
+    private $round;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="integer")
      */
-    private $roles = [];
+    private $life;
 
     /**
-     * @var string The hashed password
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="players")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $password;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $pseudo;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Game::class, mappedBy="players")
-     */
-    private $gamesAsPlayer;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Game::class, mappedBy="owner")
-     */
-    private $gamesAsOwner;
-
-    public function __construct()
-    {
-        $this->events = new ArrayCollection();
-        $this->games = new ArrayCollection();
-        $this->gamesAsPlayer = new ArrayCollection();
-        $this->gamesAsOwner = new ArrayCollection();
-    }
+    private $game;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getRound(): ?int
     {
-        return $this->email;
+        return $this->round;
     }
 
-    public function setEmail(string $email): self
+    public function setRound(int $round): self
     {
-        $this->email = $email;
+        $this->round = $round;
 
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUsername(): string
+    public function getLife(): ?int
     {
-        return (string) $this->email;
+        return $this->life;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
+    public function setLife(int $life): self
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
+        $this->life = $life;
 
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getPassword(): string
+    public function getGame(): ?Game
     {
-        return (string) $this->password;
+        return $this->game;
     }
 
-    public function setPassword(string $password): self
+    public function setGame(?Game $game): self
     {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getSalt()
-    {
-        // not needed when using the "bcrypt" algorithm in security.yaml
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    public function getPseudo(): ?string
-    {
-        return $this->pseudo;
-    }
-
-    public function setPseudo(string $pseudo): self
-    {
-        $this->pseudo = $pseudo;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Game[]
-     */
-    public function getGamesAsPlayer(): Collection
-    {
-        return $this->gamesAsPlayer;
-    }
-
-    public function addGamesAsPlayer(Game $gamesAsPlayer): self
-    {
-        if (!$this->gamesAsPlayer->contains($gamesAsPlayer)) {
-            $this->gamesAsPlayer[] = $gamesAsPlayer;
-            $gamesAsPlayer->addPlayer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGamesAsPlayer(Game $gamesAsPlayer): self
-    {
-        if ($this->gamesAsPlayer->removeElement($gamesAsPlayer)) {
-            $gamesAsPlayer->removePlayer($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Game[]
-     */
-    public function getGamesAsOwner(): Collection
-    {
-        return $this->gamesAsOwner;
-    }
-
-    public function addGamesAsOwner(Game $gamesAsOwner): self
-    {
-        if (!$this->gamesAsOwner->contains($gamesAsOwner)) {
-            $this->gamesAsOwner[] = $gamesAsOwner;
-            $gamesAsOwner->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGamesAsOwner(Game $gamesAsOwner): self
-    {
-        if ($this->gamesAsOwner->removeElement($gamesAsOwner)) {
-            // set the owning side to null (unless already changed)
-            if ($gamesAsOwner->getOwner() === $this) {
-                $gamesAsOwner->setOwner(null);
-            }
-        }
+        $this->game = $game;
 
         return $this;
     }
