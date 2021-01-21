@@ -43,9 +43,22 @@ class Player implements UserInterface
      */
     private $pseudo;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Game::class, mappedBy="players")
+     */
+    private $gamesAsPlayer;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Game::class, mappedBy="owner")
+     */
+    private $gamesAsOwner;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
+        $this->games = new ArrayCollection();
+        $this->gamesAsPlayer = new ArrayCollection();
+        $this->gamesAsOwner = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -134,6 +147,63 @@ class Player implements UserInterface
     public function setPseudo(string $pseudo): self
     {
         $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Game[]
+     */
+    public function getGamesAsPlayer(): Collection
+    {
+        return $this->gamesAsPlayer;
+    }
+
+    public function addGamesAsPlayer(Game $gamesAsPlayer): self
+    {
+        if (!$this->gamesAsPlayer->contains($gamesAsPlayer)) {
+            $this->gamesAsPlayer[] = $gamesAsPlayer;
+            $gamesAsPlayer->addPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGamesAsPlayer(Game $gamesAsPlayer): self
+    {
+        if ($this->gamesAsPlayer->removeElement($gamesAsPlayer)) {
+            $gamesAsPlayer->removePlayer($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Game[]
+     */
+    public function getGamesAsOwner(): Collection
+    {
+        return $this->gamesAsOwner;
+    }
+
+    public function addGamesAsOwner(Game $gamesAsOwner): self
+    {
+        if (!$this->gamesAsOwner->contains($gamesAsOwner)) {
+            $this->gamesAsOwner[] = $gamesAsOwner;
+            $gamesAsOwner->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGamesAsOwner(Game $gamesAsOwner): self
+    {
+        if ($this->gamesAsOwner->removeElement($gamesAsOwner)) {
+            // set the owning side to null (unless already changed)
+            if ($gamesAsOwner->getOwner() === $this) {
+                $gamesAsOwner->setOwner(null);
+            }
+        }
 
         return $this;
     }
