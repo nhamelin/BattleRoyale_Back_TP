@@ -1,0 +1,18 @@
+<img src="{{ absolute_url(asset('image/logo.png')) }}" alt="logoRees">
+
+<div class="content">
+    <p>Bonjour,</p>
+    <p>Une nouvelle demande de contact a été soumise sur rees.fr.</p>
+
+    <ul>
+        <li><strong>Nom</strong> : {{ name }}</li>
+        <li><strong>Prénom</strong> : {{ firstname }}</li>
+        <li><strong>Email</strong> : {{ email }}</li>
+        <li><strong>Object</strong> : {{ object }}</li>
+        <li><strong>Message</strong> : {{ content }}</li>
+    </ul>
+
+    <p>Cordialement,</p>
+
+    <p>Rees.fr</p>
+</div>
