@@ -53,9 +53,9 @@ class RegistrationController extends AbstractController
 
      
     /**
-     * @Route("/api/update-password", name="registerUpdate", methods="put")
+     * @Route("/api/update-password/{id}", name="registerUpdate", methods="put")
      */
-    public function registerUpdate(Request $request)
+    public function registerUpdate(Request $request, $id)
     {
 
         $content = json_decode($request->getContent(), true);
@@ -63,7 +63,7 @@ class RegistrationController extends AbstractController
             return new Response('', 400);
         }
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-        if ($user) {​​​​​
+        if ($user) {
             $user->setPassword($this->passwordEncoder->encodePassword($user, $content['password']));
             $em = $this->getDoctrine()->getManager();
             $em->flush();
