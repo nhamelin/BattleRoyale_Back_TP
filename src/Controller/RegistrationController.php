@@ -32,8 +32,6 @@ class RegistrationController extends AbstractController
         }
         $user = new User();
         $user->setEmail($content['email']);
-        $user->setName($content['name']);
-        $user->setFirstname($content['firstname']);
         $user->setPassword($this->passwordEncoder->encodePassword($user, $content['password']));
         $em = $this->getDoctrine()->getManager();
         if($em->getRepository(User::class)->findOneBy(['email' => $user->getEmail()])) {
@@ -45,7 +43,7 @@ class RegistrationController extends AbstractController
         return new Response();
     }
     /**
-     * @Route("/api/getCurrentUser", name="CurrentUser", methods="get")
+     * @Route("/api/current-user", name="CurrentUser", methods="get")
      */
      public function getCurrentUser(){
         $userId = $this->getUser()->getId();
