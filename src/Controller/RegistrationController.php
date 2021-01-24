@@ -25,22 +25,23 @@ class RegistrationController extends AbstractController
      */
     public function register(Request $request)
     {
-
+        
         $content = json_decode($request->getContent(), true);
-        if(!isset($content['email'], $content['password'])) {
+        if(!isset($content['email'], $content['pseudo'], $content['password'])) {
             return new Response('', 400);
         }
         $user = new User();
         $user->setEmail($content['email']);
+        $user->setPseudo($content['pseudo']);
         $user->setPassword($this->passwordEncoder->encodePassword($user, $content['password']));
         $em = $this->getDoctrine()->getManager();
-        if($em->getRepository(User::class)->findOneBy(['email' => $user->getEmail()])) {
+        if($em->getRepository(User::class)->findOneBy(['email' => $user->getEmail()]) || $em->getRepository(User::class)->findOneBy(['pseudo' => $user->getPseudo()])) {
             return new Response('', 409);
         }
         $em->persist($user);
         $em->flush();
 
-        return new Response();
+        return new Response('', 200, ['Access-Control-Allow-Origin' => '*']);
     }
     /**
      * @Route("/api/current-user", name="CurrentUser", methods="get")
