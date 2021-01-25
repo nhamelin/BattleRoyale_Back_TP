@@ -7,9 +7,12 @@ use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ApiResource()
+ * @ApiFilter(SearchFilter::class, properties={"players.user": "exact"})
  * @ORM\Entity(repositoryClass=GameRepository::class)
  */
 class Game

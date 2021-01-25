@@ -42,6 +42,7 @@ class RegistrationController extends AbstractController
 
         return new Response();
     }
+
     /**
      * @Route("/api/current-user", name="CurrentUser", methods="get")
      */
