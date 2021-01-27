@@ -18,3 +18,15 @@ framework:
                 adapter: cache.app
             doctrine.system_cache_pool:
                 adapter: cache.system
+        secret: '%env(APP_SECRET)%'
+        #4c3b826099ad4c4ad0f315dc78a8cbf9
+
+dbal:
+        # configure these for your database server
+        driver: 'pdo_mysql'
+        server_version: '5.7'
+        charset: utf8mb4
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
+        url: '%env(resolve:DATABASE_URL)%'
