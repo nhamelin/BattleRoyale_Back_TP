@@ -60,6 +60,12 @@ class Game
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Player::class)
+     */
+    private $lastPlayer;
+
+
     public function __construct()
     {
         $this->players = new ArrayCollection();
@@ -168,6 +174,18 @@ class Game
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getLastPlayer(): ?Player
+    {
+        return $this->lastPlayer;
+    }
+
+    public function setLastPlayer(?Player $lastPlayer): self
+    {
+        $this->lastPlayer = $lastPlayer;
 
         return $this;
     }

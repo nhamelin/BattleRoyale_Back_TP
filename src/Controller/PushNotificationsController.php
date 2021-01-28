@@ -13,7 +13,7 @@ class PushNotificationsController extends AbstractController
     /**
      * @Route("/push/send-notification", name="pushSend", methods={"POST"})
      */
-    public function subscription(): Response
+    public function send(): Response
     {
         $notification = [
             'subscription' => Subscription::create([
@@ -42,6 +42,6 @@ class PushNotificationsController extends AbstractController
         if($report->isSuccess()) {
             return new Response('Success');
         }
-        return new Response('Error', 500);
+        return new Response($report->getReason(), 500);
     }
 }

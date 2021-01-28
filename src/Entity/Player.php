@@ -2,16 +2,27 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @ApiResource
+ * @ApiFilter(SearchFilter::class, properties={"user": "exact", "game": "exact"})
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
  */
 class Player
 {
+    private $managerRegistry;
+
+    public function __construct(ManagerRegistry $managerRegistry)
+    {
+        $this->managerRegistry = $managerRegistry;
+    }
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -40,6 +51,11 @@ class Player
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $numberOrder;
 
     public function getId(): ?int
     {
@@ -90,6 +106,18 @@ class Player
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getNumberOrder(): ?int
+    {
+        return $this->numberOrder;
+    }
+
+    public function setNumberOrder(?int $numberOrder): self
+    {
+        $this->numberOrder = $numberOrder;
 
         return $this;
     }
