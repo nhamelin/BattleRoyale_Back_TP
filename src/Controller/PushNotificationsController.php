@@ -36,8 +36,7 @@ class PushNotificationsController extends AbstractController
         $webPush = new WebPush($auth);
 
         $report = $webPush->sendOneNotification(
-            $notification['subscription'],
-            $notification['payload']
+            $notification['subscription']
         );
 
         if($report->isSuccess()) {
