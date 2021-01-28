@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,13 +12,14 @@ use Minishlink\WebPush\Subscription;
 class PushNotificationsController extends AbstractController
 {
     /**
-     * @Route("/push/send-notification", name="pushSend", methods={"POST"})
+     * @Route("/push/send-notification/{user_id}", name="pushSend", methods={"POST"})
      */
-    public function send(): Response
+    public function send($user_id, UserRepository $userRepository): Response
     {
+        $user = $userRepository->find($user_id);
         $notification = [
             'subscription' => Subscription::create([
-                'endpoint' => 'https://fcm.googleapis.com/fcm/send/fsQtFvJi7wU:APA91bE1Do5CGiIb0lTe7ZUvvstvz4jG-eiXRm1DawX6VgnX1rp_clVl26J_RKVS_kJqJjEVdk3PCTbF51Kn-ZkYxXFiyfTn8mX9Y0Jl9hFiQ3I0B9pHTD3-_PpcfVjwXFnuFGE0ENo8',
+                'endpoint' => $user->getPushEndpoint(),
                 'contentEncoding' => 'aesgcm'
             ]),
             'payload' => 'hello !',

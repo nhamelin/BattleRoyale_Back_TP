@@ -48,6 +48,11 @@ class User implements UserInterface
      */
     private $games;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $pushEndpoint;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
@@ -169,6 +174,18 @@ class User implements UserInterface
                 $game->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPushEndpoint(): ?string
+    {
+        return $this->pushEndpoint;
+    }
+
+    public function setPushEndpoint(string $pushEndpoint): self
+    {
+        $this->pushEndpoint = $pushEndpoint;
 
         return $this;
     }
