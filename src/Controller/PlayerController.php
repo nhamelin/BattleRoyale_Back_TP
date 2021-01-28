@@ -40,8 +40,11 @@ class PlayerController extends AbstractController
                         $nextPlayers[$player->getId()] = $player;
                     }
                 }
-                $nextPlayer = $nextPlayers && isset($nextPlayers[min(array_keys($nextPlayers))]) ? $nextPlayers[min(array_keys($nextPlayers))] : $game->getOwner()->getId();
-                return New Response($nextPlayer->getUser()->getId());
+                if($nextPlayers && isset($nextPlayers[min(array_keys($nextPlayers))])) {
+                    $nextPlayer = $nextPlayers[min(array_keys($nextPlayers))];
+                    return New Response($nextPlayer->getUser()->getId());
+                }
+                return New Response($game->getOwner()->getId());
             }
             return new Response($game->getOwner()->getId());
         }

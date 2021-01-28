@@ -16,13 +16,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class Player
 {
-    private $managerRegistry;
-
-    public function __construct(ManagerRegistry $managerRegistry)
-    {
-        $this->managerRegistry = $managerRegistry;
-    }
-
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
