@@ -32,16 +32,16 @@ class PlayerController extends AbstractController
         if($game) {
             $lastPlayer = $game->getLastPlayer();
             if($lastPlayer) {
-                $orderLastPlayer = $lastPlayer->getNumberOrder();
+                $orderLastPlayer = $lastPlayer->getId();
                 $players = $game->getPlayers();
                 $nextPlayers = [];
                 foreach ($players as $player) {
-                    if($player->getNumberOrder() > $orderLastPlayer) {
-                        $nextPlayers[$player->getNumberOrder()] = $player;
+                    if($player->getId() > $orderLastPlayer) {
+                        $nextPlayers[$player->getId()] = $player;
                     }
                 }
                 $nextPlayer = $nextPlayers && isset($nextPlayers[min(array_keys($nextPlayers))]) ? $nextPlayers[min(array_keys($nextPlayers))] : $game->getOwner()->getId();
-                return $nextPlayer->getUser()->getId();
+                return New Response($nextPlayer->getUser()->getId());
             }
             return new Response($game->getOwner()->getId());
         }

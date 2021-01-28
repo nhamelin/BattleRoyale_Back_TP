@@ -52,11 +52,6 @@ class Player
      */
     private $user;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $numberOrder;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -106,18 +101,6 @@ class Player
     public function setUser(?User $user): self
     {
         $this->user = $user;
-
-        return $this;
-    }
-
-    public function getNumberOrder(): ?int
-    {
-        return $this->numberOrder;
-    }
-
-    public function setNumberOrder(?int $numberOrder): self
-    {
-        $this->numberOrder = $numberOrder;
 
         return $this;
     }
