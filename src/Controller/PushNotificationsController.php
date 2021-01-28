@@ -17,9 +17,8 @@ class PushNotificationsController extends AbstractController
     {
         $notification = [
             'subscription' => Subscription::create([
-                'endpoint' => 'https://updates.push.services.mozilla.com/push/abc...', // Firefox 43+,
-                'publicKey' => 'BJRMRf9TvqTUBe_vfLODm7rcgUmYRoPN7rfkBwZBAA8nE4OuMNIueaVvXHEGWpwjEo4HxpuZQE834fOU0L9dO5k', // base 64 encoded, should be 88 chars
-                'authToken' => 'CxVX6QsVToEGEcjfYPqXQw==', // base 64 encoded, should be 24 chars
+                'endpoint' => 'https://fcm.googleapis.com/fcm/send/fsQtFvJi7wU:APA91bE1Do5CGiIb0lTe7ZUvvstvz4jG-eiXRm1DawX6VgnX1rp_clVl26J_RKVS_kJqJjEVdk3PCTbF51Kn-ZkYxXFiyfTn8mX9Y0Jl9hFiQ3I0B9pHTD3-_PpcfVjwXFnuFGE0ENo8',
+                'contentEncoding' => 'aesgcm'
             ]),
             'payload' => 'hello !',
         ];
