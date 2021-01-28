@@ -49,13 +49,14 @@ class User implements UserInterface
     private $games;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\OneToMany(targetEntity=PushEndpoint::class, mappedBy="user", orphanRemoval=true)
      */
-    private $pushEndpoint;
+    private $pushEndpoints;
 
     public function __construct()
     {
         $this->games = new ArrayCollection();
+        $this->pushEndpoints = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -178,14 +179,32 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPushEndpoint(): ?string
+    /**
+     * @return Collection|PushEndpoint[]
+     */
+    public function getPushEndpoints(): Collection
     {
-        return $this->pushEndpoint;
+        return $this->pushEndpoints;
     }
 
-    public function setPushEndpoint(string $pushEndpoint): self
+    public function addPushEndpoint(PushEndpoint $pushEndpoint): self
     {
-        $this->pushEndpoint = $pushEndpoint;
+        if (!$this->pushEndpoints->contains($pushEndpoint)) {
+            $this->pushEndpoints[] = $pushEndpoint;
+            $pushEndpoint->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePushEndpoint(PushEndpoint $pushEndpoint): self
+    {
+        if ($this->pushEndpoints->removeElement($pushEndpoint)) {
+            // set the owning side to null (unless already changed)
+            if ($pushEndpoint->getUser() === $this) {
+                $pushEndpoint->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -17,14 +17,6 @@ class PushNotificationsController extends AbstractController
      */
     public function send($user_id, UserRepository $userRepository): Response
     {
-        $user = $userRepository->find($user_id);
-        $notification = [
-            'subscription' => Subscription::create([
-                'endpoint' => $user->getPushEndpoint(),
-                'contentEncoding' => 'aesgcm'
-            ])
-        ];
-
         $auth = [
             'VAPID' => [
                 'subject' => 'mailto:alexis.brohan@ynov.com', // can be a mailto: or your website address
@@ -32,16 +24,20 @@ class PushNotificationsController extends AbstractController
                 'privateKey' => 'YDfLCFzm8VvWj6BMbMW5rJ-oJ17LrepxP3mQlGKbarw', // (recommended) in fact the secret multiplier of the private key encoded in Base64-URL
             ],
         ];
-
         $webPush = new WebPush($auth);
 
-        $report = $webPush->sendOneNotification(
-            $notification['subscription']
-        );
-
-        if($report->isSuccess()) {
-            return new Response('Success');
+        $user = $userRepository->find($user_id);
+        if($user) {
+            foreach ($user->getPushEndpoints() as $endpoint) {
+                $webPush->sendOneNotification(
+                   Subscription::create([
+                       'endpoint' => $endpoint->getPath(),
+                       'contentEncoding' => 'aesgcm'
+                   ])
+                );
+            }
+            return new Response();
         }
-        return new Response($report->getReason(), 500);
+        return new Response('User not found', 500);
     }
 }
