@@ -53,6 +53,11 @@ class User implements UserInterface
      */
     private $push;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Avatar::class, cascade={"persist", "remove"})
+     */
+    private $avatar;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
@@ -205,6 +210,18 @@ class User implements UserInterface
                 $push->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvatar(): ?Avatar
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?Avatar $avatar): self
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }
