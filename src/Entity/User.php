@@ -49,9 +49,9 @@ class User implements UserInterface
     private $games;
 
     /**
-     * @ORM\OneToMany(targetEntity=PushEndpoint::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Push::class, mappedBy="user", orphanRemoval=true)
      */
-    private $pushEndpoints;
+    private $push;
 
     public function __construct()
     {
@@ -180,29 +180,29 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|PushEndpoint[]
+     * @return Collection|Push[]
      */
-    public function getPushEndpoints(): Collection
+    public function getPush(): Collection
     {
-        return $this->pushEndpoints;
+        return $this->push;
     }
 
-    public function addPushEndpoint(PushEndpoint $pushEndpoint): self
+    public function addPush(Push $push): self
     {
-        if (!$this->pushEndpoints->contains($pushEndpoint)) {
-            $this->pushEndpoints[] = $pushEndpoint;
-            $pushEndpoint->setUser($this);
+        if (!$this->push->contains($push)) {
+            $this->$push[] = $push;
+            $push->setUser($this);
         }
 
         return $this;
     }
 
-    public function removePushEndpoint(PushEndpoint $pushEndpoint): self
+    public function removePush(Push $push): self
     {
-        if ($this->pushEndpoints->removeElement($pushEndpoint)) {
+        if ($this->push->removeElement($push)) {
             // set the owning side to null (unless already changed)
-            if ($pushEndpoint->getUser() === $this) {
-                $pushEndpoint->setUser(null);
+            if ($push->getUser() === $this) {
+                $push->setUser(null);
             }
         }
 

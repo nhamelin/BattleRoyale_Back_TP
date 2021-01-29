@@ -28,10 +28,10 @@ class PushNotificationsController extends AbstractController
 
         $user = $userRepository->find($user_id);
         if($user) {
-            foreach ($user->getPushEndpoints() as $endpoint) {
+            foreach ($user->getPush() as $push) {
                 $webPush->sendOneNotification(
                    Subscription::create([
-                       'endpoint' => $endpoint->getPath(),
+                       'endpoint' => $push->getEndpoint(),
                        'contentEncoding' => 'aesgcm'
                    ])
                 );
