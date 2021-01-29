@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @ApiResource
+ * @ApiFilter(SearchFilter::class, properties={"user": "exact", "game": "exact"})
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
  */
 class Player

@@ -48,9 +48,20 @@ class User implements UserInterface
      */
     private $games;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Push::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $push;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Avatar::class, cascade={"persist", "remove"})
+     */
+    private $avatar;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
+        $this->pushEndpoints = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -169,6 +180,48 @@ class User implements UserInterface
                 $game->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Push[]
+     */
+    public function getPush(): Collection
+    {
+        return $this->push;
+    }
+
+    public function addPush(Push $push): self
+    {
+        if (!$this->push->contains($push)) {
+            $this->$push[] = $push;
+            $push->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePush(Push $push): self
+    {
+        if ($this->push->removeElement($push)) {
+            // set the owning side to null (unless already changed)
+            if ($push->getUser() === $this) {
+                $push->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAvatar(): ?Avatar
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?Avatar $avatar): self
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

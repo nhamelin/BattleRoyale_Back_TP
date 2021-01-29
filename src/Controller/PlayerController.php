@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Entity\Player;
-
+use App\Repository\GameRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,5 +22,32 @@ class PlayerController extends AbstractController
             return new Response($player->getId(), 200);
         }
         return new Response('', 500);
+    }
+
+    /**
+     * @Route("/api/current-player-game/{game_id}")
+     */
+    public function getCurrentPlayerOfGame(Request $request, $game_id, GameRepository $gameRepository) {
+        $game = $gameRepository->find($game_id);
+        if($game) {
+            $lastPlayer = $game->getLastPlayer();
+            if($lastPlayer) {
+                $orderLastPlayer = $lastPlayer->getId();
+                $players = $game->getPlayers();
+                $nextPlayers = [];
+                foreach ($players as $player) {
+                    if($player->getId() > $orderLastPlayer) {
+                        $nextPlayers[$player->getId()] = $player;
+                    }
+                }
+                if($nextPlayers && isset($nextPlayers[min(array_keys($nextPlayers))])) {
+                    $nextPlayer = $nextPlayers[min(array_keys($nextPlayers))];
+                    return New Response($nextPlayer->getUser()->getId());
+                }
+                return New Response($game->getOwner()->getId());
+            }
+            return new Response($game->getOwner()->getId());
+        }
+        return new Response('no game found', 500);
     }
 }
